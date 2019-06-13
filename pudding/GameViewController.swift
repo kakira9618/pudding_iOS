@@ -1,11 +1,3 @@
-//
-//  GameViewController.swift
-//  pudding
-//
-//  Created by kakira on 2015/09/07.
-//  Copyright © 2015年 kakira. All rights reserved.
-//
-
 import GLKit
 import OpenGLES
 
@@ -16,6 +8,20 @@ func BUFFER_OFFSET(_ i: Int) -> UnsafeRawPointer? {
 let UNIFORM_MODELVIEWPROJECTION_MATRIX = 0
 let UNIFORM_NORMAL_MATRIX = 1
 var uniforms = [GLint](repeating: 0, count: 2)
+
+class GLKUpdater : NSObject, GLKViewControllerDelegate {
+    
+    weak var glkViewController : GameViewController!
+    
+    init(glkViewController : GameViewController) {
+        self.glkViewController = glkViewController
+    }
+    
+    func glkViewControllerUpdate(_ controller: GLKViewController) {
+        self.glkViewController.update()
+    }
+}
+
 
 class GameViewController: GLKViewController {
     
@@ -45,6 +51,8 @@ class GameViewController: GLKViewController {
     var kSpring: GLfloat = 0.12
     var puddingStrength: GLfloat = 0.95
     var forceStrength: GLfloat = 0.10
+    
+    var glkUpdater: GLKUpdater!
     
     class Vector3d {
         var x: GLfloat
@@ -102,11 +110,6 @@ class GameViewController: GLKViewController {
         view.drawableDepthFormat = .format24
         self.preferredFramesPerSecond = 60
         
-        //    UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]
-        //                                            initWithTarget:self action:@selector(handlePinchGesture:)];
-        //    [self.view addGestureRecognizer:pinchGesture];
-        //    [pinchGesture release];
-        
         let myPinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(GameViewController.pinchGesture(_:)))
         self.view.addGestureRecognizer(myPinchGesture)
         
@@ -129,7 +132,7 @@ class GameViewController: GLKViewController {
         }
     }
     
-    func pinchGesture(_ sender: AnyObject) {
+    @objc func pinchGesture(_ sender: AnyObject) {
         touching = false
         let pinch = sender as! UIPinchGestureRecognizer
         let v = pinch.velocity
@@ -178,10 +181,7 @@ class GameViewController: GLKViewController {
         EAGLContext.setCurrent(self.context)
         
         self.effect = GLKBaseEffect()
-        /*
-         self.effect!.light0.enabled = GLboolean(GL_TRUE)
-         self.effect!.light0.diffuseColor = GLKVector4Make(1.0, 0.4, 0.4, 1.0)
-         */
+
         generatePudding()
         updatePuddingVertices()
         
@@ -204,6 +204,9 @@ class GameViewController: GLKViewController {
         glBufferData(GLenum(GL_ELEMENT_ARRAY_BUFFER), GLsizeiptr(MemoryLayout<GLuint>.size * gPuddingIndexData.count), &gPuddingIndexData, GLenum(GL_STATIC_DRAW))
         
         glBindVertexArrayOES(0);
+        
+        self.glkUpdater = GLKUpdater(glkViewController: self)
+        self.delegate = self.glkUpdater
     }
     
     func tearDownGL() {
@@ -268,18 +271,6 @@ class GameViewController: GLKViewController {
             gPuddingVertexData[i * 6 + 4] = v.color.y
             gPuddingVertexData[i * 6 + 5] = v.color.z
         }
-        /*
-         for i in 0..<numC - 1 {
-         for j in 0...numP {
-         let jj = j % numP
-         let v1 = pudding[i * numP + jj]
-         let v2 = pudding[(i + 1) * numP + jj]
-         gPuddingVertexData += [v1.p.x, v1.p.y, v1.p.z, v1.color.x, v1.color.y, v1.color.z]
-         gPuddingVertexData += [v2.p.x, v2.p.y, v2.p.z, v2.color.x, v2.color.y, v2.color.z]
-         }
-         }
-         */
-        
     }
     
     func ret3dPos(x: GLfloat, y: GLfloat) -> Vector3d {
@@ -331,22 +322,16 @@ class GameViewController: GLKViewController {
         }
     }
     
-    // MARK: - GLKView and GLKViewController delegate methods
-    
     func update() {
-        
         let aspect = fabsf(Float(self.view.bounds.size.width / self.view.bounds.size.height))
         let projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), aspect, 0.1, 100.0)
         
         movePuddingVertices()
         updatePuddingVertices()
         
-        
-        
         glBindBuffer(GLenum(GL_ARRAY_BUFFER), vertexBuffer)
         glBufferSubData(GLenum(GL_ARRAY_BUFFER), GLintptr(0), MemoryLayout<GLfloat>.size * gPuddingVertexData.count, &gPuddingVertexData)
-        //glBufferData(GLenum(GL_ARRAY_BUFFER), GLsizeiptr(sizeof(GLfloat) * gPuddingVertexData.count), &gPuddingVertexData, GLenum(GL_STREAM_DRAW))
-        
+
         self.effect?.transform.projectionMatrix = projectionMatrix
         let RAD = (pi / 180.0)
         
@@ -356,7 +341,7 @@ class GameViewController: GLKViewController {
             cameraDistance * sin(cameraAzimuth * RAD) * cos(cameraElevation * RAD),
             0.0, 0.0, 0.0,
             0.0, 1.0, 0.0)
-        // Compute the model view matrix for the object rendered with GLKit
+        
         var modelViewMatrix = GLKMatrix4MakeTranslation(0.0, 0.0, 0.0)
         modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, 0.0, 1.0, 1.0, 1.0)
         modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix)
@@ -364,192 +349,23 @@ class GameViewController: GLKViewController {
         self.effect?.transform.modelviewMatrix = modelViewMatrix
         
         rotation += Float(self.timeSinceLastUpdate * 0.5)
-        
-        
     }
     
     override func glkView(_ view: GLKView, drawIn rect: CGRect) {
-        
         
         glClearColor(0.65, 0.65, 0.65, 1.0)
         glClear(GLbitfield(GL_COLOR_BUFFER_BIT) | GLbitfield(GL_DEPTH_BUFFER_BIT))
         
         glBindVertexArrayOES(vertexArray)
-        /*
-         glEnableClientState(GLenum(GL_NORMAL_ARRAY));
-         glBindBuffer(GL_ARRAY_BUFFER, nrmID);
-         glNormalPointer(GL_FLOAT, 0, 0);
-         */
-        
-        // Render the object with GLKit
+
         self.effect?.prepareToDraw()
-        /*
-         for i in 0..<numC - 1 {
-         glDrawArrays(GLenum(GL_TRIANGLE_STRIP) , GLsizei(2 * i * (numP + 1)), GLsizei(2 * (numP + 1)))
-         }
-         */
-        glBindBuffer(GLenum(GL_ELEMENT_ARRAY_BUFFER), indexBuffer)
-        /*
-         glDrawElements(GLenum(GL_TRIANGLE_STRIP), GLsizei(gPuddingIndexData.count), GLenum(GL_UNSIGNED_INT), BUFFER_OFFSET(0))
-         */
         
+        glBindBuffer(GLenum(GL_ARRAY_BUFFER), vertexBuffer)
+    
         for i in 0..<numC - 1 {
             glDrawElements(GLenum(GL_TRIANGLE_STRIP), GLsizei(2 * (numP + 1)), GLenum(GL_UNSIGNED_INT), BUFFER_OFFSET(MemoryLayout<GLuint>.size * 2 * i * (numP + 1)))
         }
         
-        glBindBuffer(GLenum(GL_ELEMENT_ARRAY_BUFFER), 0)
-        
+        glBindBuffer(GLenum(GL_ARRAY_BUFFER), 0)
     }
-    
-    // MARK: -  OpenGL ES 2 shader compilation
-    /*
-     func loadShaders() -> Bool {
-     var vertShader: GLuint = 0
-     var fragShader: GLuint = 0
-     var vertShaderPathname: String
-     var fragShaderPathname: String
-     
-     // Create shader program.
-     program = glCreateProgram()
-     
-     // Create and compile vertex shader.
-     vertShaderPathname = NSBundle.mainBundle().pathForResource("Shader", ofType: "vsh")!
-     if self.compileShader(&vertShader, type: GLenum(GL_VERTEX_SHADER), file: vertShaderPathname) == false {
-     print("Failed to compile vertex shader")
-     return false
-     }
-     
-     // Create and compile fragment shader.
-     fragShaderPathname = NSBundle.mainBundle().pathForResource("Shader", ofType: "fsh")!
-     if !self.compileShader(&fragShader, type: GLenum(GL_FRAGMENT_SHADER), file: fragShaderPathname) {
-     print("Failed to compile fragment shader");
-     return false
-     }
-     
-     // Attach vertex shader to program.
-     glAttachShader(program, vertShader)
-     
-     // Attach fragment shader to program.
-     glAttachShader(program, fragShader)
-     
-     // Bind attribute locations.
-     // This needs to be done prior to linking.
-     glBindAttribLocation(program, GLuint(GLKVertexAttrib.Position.rawValue), "position")
-     glBindAttribLocation(program, GLuint(GLKVertexAttrib.Normal.rawValue), "normal")
-     
-     // Link program.
-     if !self.linkProgram(program) {
-     print("Failed to link program: \(program)")
-     
-     if vertShader != 0 {
-     glDeleteShader(vertShader)
-     vertShader = 0
-     }
-     if fragShader != 0 {
-     glDeleteShader(fragShader)
-     fragShader = 0
-     }
-     if program != 0 {
-     glDeleteProgram(program)
-     program = 0
-     }
-     
-     return false
-     }
-     
-     // Get uniform locations.
-     uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX] = glGetUniformLocation(program, "modelViewProjectionMatrix")
-     uniforms[UNIFORM_NORMAL_MATRIX] = glGetUniformLocation(program, "normalMatrix")
-     
-     // Release vertex and fragment shaders.
-     if vertShader != 0 {
-     glDetachShader(program, vertShader)
-     glDeleteShader(vertShader);
-     }
-     if fragShader != 0 {
-     glDetachShader(program, fragShader);
-     glDeleteShader(fragShader);
-     }
-     
-     return true
-     }
-     
-     
-     func compileShader(inout shader: GLuint, type: GLenum, file: String) -> Bool {
-     var status: GLint = 0
-     var source: UnsafePointer<Int8>
-     do {
-     source = try NSString(contentsOfFile: file, encoding: NSUTF8StringEncoding).UTF8String
-     } catch {
-     print("Failed to load vertex shader")
-     return false
-     }
-     var castSource = UnsafePointer<GLchar>(source)
-     
-     shader = glCreateShader(type)
-     glShaderSource(shader, 1, &castSource, nil)
-     glCompileShader(shader)
-     
-     //#if defined(DEBUG)
-     //        var logLength: GLint = 0
-     //        glGetShaderiv(shader, GLenum(GL_INFO_LOG_LENGTH), &logLength);
-     //        if logLength > 0 {
-     //            var log = UnsafeMutablePointer<GLchar>(malloc(Int(logLength)))
-     //            glGetShaderInfoLog(shader, logLength, &logLength, log);
-     //            NSLog("Shader compile log: \n%s", log);
-     //            free(log)
-     //        }
-     //#endif
-     
-     glGetShaderiv(shader, GLenum(GL_COMPILE_STATUS), &status)
-     if status == 0 {
-     glDeleteShader(shader);
-     return false
-     }
-     return true
-     }
-     
-     func linkProgram(prog: GLuint) -> Bool {
-     var status: GLint = 0
-     glLinkProgram(prog)
-     
-     //#if defined(DEBUG)
-     //        var logLength: GLint = 0
-     //        glGetShaderiv(shader, GLenum(GL_INFO_LOG_LENGTH), &logLength);
-     //        if logLength > 0 {
-     //            var log = UnsafeMutablePointer<GLchar>(malloc(Int(logLength)))
-     //            glGetShaderInfoLog(shader, logLength, &logLength, log);
-     //            NSLog("Shader compile log: \n%s", log);
-     //            free(log)
-     //        }
-     //#endif
-     
-     glGetProgramiv(prog, GLenum(GL_LINK_STATUS), &status)
-     if status == 0 {
-     return false
-     }
-     
-     return true
-     }
-     
-     func validateProgram(prog: GLuint) -> Bool {
-     var logLength: GLsizei = 0
-     var status: GLint = 0
-     
-     glValidateProgram(prog)
-     glGetProgramiv(prog, GLenum(GL_INFO_LOG_LENGTH), &logLength)
-     if logLength > 0 {
-     var log: [GLchar] = [GLchar](count: Int(logLength), repeatedValue: 0)
-     glGetProgramInfoLog(prog, logLength, &logLength, &log)
-     print("Program validate log: \n\(log)")
-     }
-     
-     glGetProgramiv(prog, GLenum(GL_VALIDATE_STATUS), &status)
-     var returnVal = true
-     if status == 0 {
-     returnVal = false
-     }
-     return returnVal
-     }
-     */
 }
