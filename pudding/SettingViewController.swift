@@ -26,7 +26,6 @@ class SettingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         slider1.value = gvcl!.kSpring
         slider2.value = gvcl!.puddingStrength
         slider3.value = gvcl!.forceStrength
@@ -67,22 +66,9 @@ class SettingViewController: UIViewController {
         dismiss(animated: true)
     }
     
-    
     func updateTexts() {
-        kSpring.text = "\(slider1.value)"
-        puddingStrength.text = "\(slider2.value)"
-        forceStrength.text = "\(slider3.value)"
+        kSpring.text = "ばね定数: \(slider1.value)"
+        puddingStrength.text = "減衰係数: \(slider2.value)"
+        forceStrength.text = "タッチ影響力: \(slider3.value)"
     }
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,10 +14,6 @@
         <scene sceneID="tXr-a1-R10">
             <objects>
                 <viewController id="BV1-FR-VrT" customClass="GameViewController" customModule="pudding" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="8aa-yV-Osq"/>
-                        <viewControllerLayoutGuide type="bottom" id="qHh-Mt-9TT"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="3se-qz-xqx" customClass="GLKView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -35,8 +31,9 @@
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="OT0-Zj-Gj3" firstAttribute="trailing" secondItem="3se-qz-xqx" secondAttribute="trailingMargin" id="KZv-nn-kjZ"/>
-                            <constraint firstItem="OT0-Zj-Gj3" firstAttribute="top" secondItem="8aa-yV-Osq" secondAttribute="bottom" id="qgx-Eg-aeG"/>
+                            <constraint firstItem="OT0-Zj-Gj3" firstAttribute="top" secondItem="Amg-my-KYL" secondAttribute="top" id="qgx-Eg-aeG"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="Amg-my-KYL"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
@@ -47,16 +44,69 @@
         <scene sceneID="ZQo-CR-oli">
             <objects>
                 <viewController title="Settings" id="gtD-OG-UKb" customClass="SettingViewController" customModule="pudding" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Vkc-3u-6ZO"/>
-                        <viewControllerLayoutGuide type="bottom" id="liV-at-I0G"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Oka-1n-J6J">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.001" maxValue="0.999" translatesAutoresizingMaskIntoConstraints="NO" id="Fhn-2i-uBh">
+                                <rect key="frame" x="21" y="141" width="339" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="slider1"/>
+                                <connections>
+                                    <action selector="slider1Changed:" destination="gtD-OG-UKb" eventType="valueChanged" id="1hQ-5A-Ad1"/>
+                                </connections>
+                            </slider>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.001" maxValue="0.999" translatesAutoresizingMaskIntoConstraints="NO" id="Fse-E4-DBn">
+                                <rect key="frame" x="21" y="235" width="339" height="31"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="slider2"/>
+                                <connections>
+                                    <action selector="slider2Changed:" destination="gtD-OG-UKb" eventType="valueChanged" id="Usd-Nf-FSE"/>
+                                </connections>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oed-I4-W4j">
+                                <rect key="frame" x="23" y="112" width="336" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="kSpring"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UmI-J2-arQ">
+                                <rect key="frame" x="23" y="206" width="336" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="puddingStrength"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-0.29999999999999999" maxValue="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="Vd6-6V-uaZ">
+                                <rect key="frame" x="21" y="328" width="339" height="31"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="slider3"/>
+                                <connections>
+                                    <action selector="slider3Changed:" destination="gtD-OG-UKb" eventType="valueChanged" id="COa-fK-QjA"/>
+                                </connections>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EyW-Ap-dDj">
+                                <rect key="frame" x="23" y="299" width="336" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="forceStrength"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9vv-Rd-Tcg">
+                                <rect key="frame" x="19" y="383" width="94" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="def"/>
+                                <state key="normal" title="Set to Default"/>
+                                <connections>
+                                    <action selector="setToDefault:" destination="gtD-OG-UKb" eventType="touchUpInside" id="0pm-9a-KnR"/>
+                                </connections>
+                            </button>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syg-dE-EdY">
-                                <rect key="frame" x="-4" y="20" width="383" height="44"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <items>
                                     <navigationItem title="Settings" id="df8-df-Hyr">
                                         <barButtonItem key="leftBarButtonItem" title="Back" id="X2h-f8-Qvv">
@@ -67,76 +117,14 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.001" maxValue="0.999" translatesAutoresizingMaskIntoConstraints="NO" id="Fhn-2i-uBh">
-                                <rect key="frame" x="11" y="112" width="352.5" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" identifier="slider1"/>
-                                <connections>
-                                    <action selector="slider1Changed:" destination="gtD-OG-UKb" eventType="valueChanged" id="1hQ-5A-Ad1"/>
-                                </connections>
-                            </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.001" maxValue="0.999" translatesAutoresizingMaskIntoConstraints="NO" id="Fse-E4-DBn">
-                                <rect key="frame" x="18" y="206" width="339" height="31"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" identifier="slider2"/>
-                                <connections>
-                                    <action selector="slider2Changed:" destination="gtD-OG-UKb" eventType="valueChanged" id="Usd-Nf-FSE"/>
-                                </connections>
-                            </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oed-I4-W4j">
-                                <rect key="frame" x="20" y="83" width="560" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" identifier="kSpring"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UmI-J2-arQ">
-                                <rect key="frame" x="20" y="177" width="560" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" identifier="puddingStrength"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-0.29999999999999999" maxValue="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="Vd6-6V-uaZ">
-                                <rect key="frame" x="18" y="299" width="339" height="31"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" identifier="slider3"/>
-                                <connections>
-                                    <action selector="slider3Changed:" destination="gtD-OG-UKb" eventType="valueChanged" id="COa-fK-QjA"/>
-                                </connections>
-                            </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EyW-Ap-dDj">
-                                <rect key="frame" x="20" y="270" width="560" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" identifier="forceStrength"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9vv-Rd-Tcg">
-                                <rect key="frame" x="16" y="354" width="94" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" identifier="def"/>
-                                <state key="normal" title="Set to Default"/>
-                                <connections>
-                                    <action selector="setToDefault:" destination="gtD-OG-UKb" eventType="touchUpInside" id="0pm-9a-KnR"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="syg-dE-EdY" firstAttribute="top" secondItem="Oka-1n-J6J" secondAttribute="topMargin" id="3iC-Ou-9bP"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="syg-dE-EdY" secondAttribute="trailing" constant="-20" id="95d-Q2-agn"/>
-                            <constraint firstItem="syg-dE-EdY" firstAttribute="top" secondItem="Oka-1n-J6J" secondAttribute="topMargin" constant="20" id="Gxw-Zb-wcN"/>
-                            <constraint firstItem="syg-dE-EdY" firstAttribute="leading" secondItem="Oka-1n-J6J" secondAttribute="leadingMargin" constant="-20" id="hse-nX-svO"/>
+                            <constraint firstItem="syg-dE-EdY" firstAttribute="leading" secondItem="yn0-63-7cA" secondAttribute="leading" id="YBC-O3-KVL"/>
+                            <constraint firstItem="syg-dE-EdY" firstAttribute="top" secondItem="yn0-63-7cA" secondAttribute="top" id="ZEr-Z9-HgB"/>
+                            <constraint firstItem="syg-dE-EdY" firstAttribute="trailing" secondItem="yn0-63-7cA" secondAttribute="trailing" id="jmO-tS-n3H"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="3iC-Ou-9bP"/>
-                            </mask>
-                        </variation>
+                        <viewLayoutGuide key="safeArea" id="yn0-63-7cA"/>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="EwF-Tt-G4J"/>
                     <connections>
@@ -152,7 +140,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WWf-QD-hih" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1142" y="386"/>
+            <point key="canvasLocation" x="1141.5999999999999" y="385.45727136431788"/>
         </scene>
     </scenes>
 </document>
